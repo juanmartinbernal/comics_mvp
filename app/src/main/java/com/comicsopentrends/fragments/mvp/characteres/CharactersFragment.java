@@ -59,6 +59,7 @@ public class CharactersFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setHasFixedSize(true);
 
+
         EndlessScrollListener scrollListener = new EndlessScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -131,6 +132,16 @@ public class CharactersFragment extends Fragment {
 
     public void refreshListScroll() {
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    /**
+     * Método encargado de actualizar el subtitulo de la toolbar para indicar la cantidad de objectos en el listado.
+     * @param text
+     */
+    public void updateToolbar(String text) {
+        if (getActivity() != null) {
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" + text);
+        }
     }
 
     // See above

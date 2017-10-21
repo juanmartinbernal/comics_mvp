@@ -34,6 +34,7 @@ public class CharactersFragmentPresenterImpl implements CharactersFragmentPresen
 
     /**
      * Método encargado de realizar una busqueda donde el nombre comience por la cadena dada.
+     *
      * @param query
      */
     @Override
@@ -43,7 +44,7 @@ public class CharactersFragmentPresenterImpl implements CharactersFragmentPresen
         call.enqueue(new Callback<CharacterResponse>() {
             @Override
             public void onResponse(Call<CharacterResponse> call, Response<CharacterResponse> response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
                     characters.clear();
                     final List<Character> movies = response.body().data.results;
                     totalCharacteres = response.body().data.total;
@@ -64,6 +65,7 @@ public class CharactersFragmentPresenterImpl implements CharactersFragmentPresen
 
     /**
      * Método encargado de cargar los personajes dado el offset para hacer la paginación
+     *
      * @param offset
      */
     @Override
@@ -79,6 +81,7 @@ public class CharactersFragmentPresenterImpl implements CharactersFragmentPresen
                     List<Character> results = response.body().data.results;
                     characters.addAll(results);
                     charactersFragment.refreshListScroll();
+                    charactersFragment.updateToolbar(characters.size() + "/" + totalCharacteres);
                 }
                 charactersFragment.hide();
 
@@ -99,12 +102,13 @@ public class CharactersFragmentPresenterImpl implements CharactersFragmentPresen
 
     /**
      * Método encargado de realizar la paginación y cargar los nuevos personajes en el listado.
+     *
      * @param offset
      */
     @Override
     public void onLoadMore(int offset) {
         offset = offset * 20;
-        if(offset <= totalCharacteres) {
+        if (offset <= totalCharacteres) {
             loadList(offset);
         }
     }
