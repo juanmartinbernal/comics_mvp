@@ -1,0 +1,148 @@
+package com.comicsopentrends.adapter;
+
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.comicsopentrends.R;
+import com.comicsopentrends.model.Character;
+import com.comicsopentrends.model.Comic;
+import com.comicsopentrends.model.Event;
+import com.comicsopentrends.model.ItemComic;
+import com.comicsopentrends.model.ItemEvent;
+import com.comicsopentrends.model.Thumbnail;
+import com.comicsopentrends.util.CircleTransform;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+/**
+ * Created by Juan Martin Bernal on 20/10/2017.
+ * Clase que permite pintar los personajes en una lista
+ */
+public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder> {
+
+    public interface OnItemClickListener {
+        void onItemClick(Character item);
+    }
+
+    private final OnItemClickListener listener;
+    private List<Character> characterList;
+    private List<ItemComic> comicList;
+    private List<ItemEvent> eventList;
+
+    public CharacterAdapter(List<Character> characterList, OnItemClickListener listener) {
+        this.listener = listener;
+        this.characterList = characterList;
+    }
+
+    public CharacterAdapter(List<ItemComic> comicList, List<ItemEvent> eventList) {
+        this.comicList = comicList;
+        this.eventList = eventList;
+        listener = null;
+    }
+
+
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_character, parent, false);
+
+        return new ViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (eventList != null) {
+            holder.bind(eventList.get(position));
+        } else if (comicList != null) {
+            holder.bind(comicList.get(position));
+        } else {
+            holder.bind(characterList.get(position), listener);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        if (eventList != null) {
+            return eventList.size();
+        } else if (comicList != null) {
+            return comicList.size();
+        } else {
+            return characterList.size();
+        }
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.txtName)
+        TextView name;
+        @BindView(R.id.txtComic)
+        TextView txtComic;
+        @BindView(R.id.imgCharacter)
+        ImageView image;
+        @BindView(R.id.progressBarCharacter)
+        ProgressBar progressBar;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void bind(final ItemEvent itemEvent) {
+            progressBar.setVisibility(View.GONE);
+            name.setText(itemEvent.name);
+        }
+
+        public void bind(final ItemComic itemComic) {
+            progressBar.setVisibility(View.GONE);
+            name.setText(itemComic.name);
+        }
+
+        public void bind(final Character item, final OnItemClickListener listener) {
+            name.setText(item.name);
+
+            Comic comic = item.comic;
+            if (comic != null)
+                txtComic.setText((comic.items != null && comic.items.size() > 0) ? comic.items.get(0).name : "No tiene comics");
+
+            Thumbnail thumbnail = item.thumbnail;
+            String url = "";
+            if (thumbnail != null)
+                url = thumbnail.path + "." + thumbnail.extension;
+
+            if (!TextUtils.isEmpty(url)) {
+                progressBar.setVisibility(View.VISIBLE);
+                Picasso.with(itemView.getContext()).load(url).resize(100, 100).centerCrop().transform(new CircleTransform()).into(image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError() {
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
+    }
+
+}
