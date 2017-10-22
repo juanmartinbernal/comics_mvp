@@ -1,5 +1,6 @@
 package com.comicsopentrends.fragments.mvp.characteres;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.comicsopentrends.CharacterDetailActivity;
 import com.comicsopentrends.R;
@@ -24,8 +28,11 @@ import com.comicsopentrends.adapter.CharacterAdapter;
 import com.comicsopentrends.fragments.mvp.characteres.presenter.CharactersFragmentPresenter;
 import com.comicsopentrends.fragments.mvp.characteres.presenter.impl.CharactersFragmentPresenterImpl;
 import com.comicsopentrends.model.Character;
+import com.comicsopentrends.util.CircleTransform;
 import com.comicsopentrends.util.Constants;
 import com.comicsopentrends.util.EndlessScrollListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -79,7 +86,7 @@ public class CharactersFragment extends Fragment {
                 intent.putExtra("characterId", item.id);
                 startActivity(intent);
             }
-        }));
+        }, this));
 
         charactersFragmentPresenter.loadList(0);
 
@@ -136,12 +143,34 @@ public class CharactersFragment extends Fragment {
 
     /**
      * Método encargado de actualizar el subtitulo de la toolbar para indicar la cantidad de objectos en el listado.
+     *
      * @param text
      */
     public void updateToolbar(String text) {
         if (getActivity() != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle("" + text);
         }
+    }
+
+    /**
+     * Método encargado de previsualizar la imagen del personaje
+     *
+     * @param url
+     * @param name
+     */
+    public void seeImageCharacter(String url, String name) {
+        // custom dialog
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_photo_profile);
+
+        // set the custom dialog components - text, image and button
+        TextView text = (TextView) dialog.findViewById(R.id.text);
+        text.setText("" + name);
+        ImageView image = (ImageView) dialog.findViewById(R.id.image);
+        Picasso.with(getContext()).load(url).into(image);
+
+        dialog.show();
     }
 
     // See above

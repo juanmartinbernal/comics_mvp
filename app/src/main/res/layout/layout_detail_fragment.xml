@@ -88,6 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
                 android:text="@string/prompt_detail" />
 
             <Button
@@ -96,6 +98,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
                 android:text="@string/prompt_wiki" />
 
             <Button
@@ -104,6 +108,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="8dp"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
                 android:text="@string/prompt_comic" />
         </LinearLayout>
 

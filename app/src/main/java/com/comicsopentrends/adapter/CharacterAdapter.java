@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.comicsopentrends.R;
+import com.comicsopentrends.fragments.mvp.characteres.CharactersFragment;
 import com.comicsopentrends.model.Character;
 import com.comicsopentrends.model.Comic;
 import com.comicsopentrends.model.Event;
@@ -40,10 +41,12 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
     private List<Character> characterList;
     private List<ItemComic> comicList;
     private List<ItemEvent> eventList;
+    private CharactersFragment charactersFragment;
 
-    public CharacterAdapter(List<Character> characterList, OnItemClickListener listener) {
+    public CharacterAdapter(List<Character> characterList, OnItemClickListener listener, CharactersFragment charactersFragment) {
         this.listener = listener;
         this.characterList = characterList;
+        this.charactersFragment = charactersFragment;
     }
 
     public CharacterAdapter(List<ItemComic> comicList, List<ItemEvent> eventList) {
@@ -83,7 +86,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.txtName)
         TextView name;
@@ -116,14 +119,14 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
             if (comic != null)
                 txtComic.setText((comic.items != null && comic.items.size() > 0) ? comic.items.get(0).name : "No tiene comics");
 
-            Thumbnail thumbnail = item.thumbnail;
+            final Thumbnail thumbnail = item.thumbnail;
             String url = "";
             if (thumbnail != null)
                 url = thumbnail.path + "." + thumbnail.extension;
 
             if (!TextUtils.isEmpty(url)) {
                 progressBar.setVisibility(View.VISIBLE);
-                Picasso.with(itemView.getContext()).load(url).resize(100, 100).centerCrop().transform(new CircleTransform()).into(image, new Callback() {
+                Picasso.with(itemView.getContext()).load(url).resize(150, 150).centerCrop().transform(new CircleTransform()).into(image, new Callback() {
                     @Override
                     public void onSuccess() {
                         progressBar.setVisibility(View.GONE);
@@ -135,6 +138,14 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
                     }
                 });
             }
+
+            image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String url = thumbnail.path + "." + thumbnail.extension;
+                    charactersFragment.seeImageCharacter(url, item.name);
+                }
+            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
