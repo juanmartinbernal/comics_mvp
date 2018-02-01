@@ -15,12 +15,12 @@ import retrofit2.http.Query;
 public interface ApiInterface {
 
     @GET("characters")
-    Call<CharacterResponse> getComics(@Query("apikey") String apiKey, @Query("offset") int offset,@Query("hash") String hash, @Query("ts") String ts);
+    Call<CharacterResponse> getComics(@Query("offset") int offset);
 
     @GET("characters/{id}")
-    Call<CharacterResponse> getComicDetails(@Path("id") int id, @Query("apikey") String apiKey, @Query("hash") String hash, @Query("ts") String ts);
+    Call<CharacterResponse> getComicDetails(@Path("id") int id);
 
     @GET("characters")
-    Call<CharacterResponse> searchComic(@Query("nameStartsWith") String query, @Query("apikey") String apiKey, @Query("hash") String hash, @Query("ts") String ts);
+    Call<CharacterResponse> searchComic(@Query("nameStartsWith") String query);
 }
 

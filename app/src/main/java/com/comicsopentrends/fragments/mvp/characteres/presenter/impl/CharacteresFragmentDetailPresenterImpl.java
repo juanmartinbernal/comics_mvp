@@ -33,7 +33,7 @@ public class CharacteresFragmentDetailPresenterImpl implements CharacteresFragme
     @Override
     public void goToDetail(int characterId) {
 
-        Call<CharacterResponse> call = apiService.getComicDetails(characterId, ApiClient.API_KEY, Utils.md5(ApiClient.HASH), ApiClient.TIMESTAMP);
+        Call<CharacterResponse> call = apiService.getComicDetails(characterId);
         call.enqueue(new Callback<CharacterResponse>() {
             @Override
             public void onResponse(Call<CharacterResponse> call, Response<CharacterResponse> response) {
