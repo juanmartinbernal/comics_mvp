@@ -17,20 +17,22 @@ class AuthInterceptor implements Interceptor {
 
     private final String publicKey;
     private final String privateKey;
+    private final String timestampkey;
 
-    AuthInterceptor(String publicKey, String privateKey) {
+    AuthInterceptor(String publicKey, String privateKey, String timestampkey) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
+        this.timestampkey = timestampkey;
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String timestamp = "1";
+        String timestamp = timestampkey;
         String hash = null;
         //TIMESTAMP + PRIVATE_KEY + PUBLIC_KEY
         hash = Utils.md5(timestamp + privateKey + publicKey);
 
-        Request request = chain.request();
+        Request request = chain.request().newBuilder().addHeader("key", "jdkskgds").build();
         HttpUrl url = request.url()
                 .newBuilder()
                 .addQueryParameter(TIMESTAMP_KEY, timestamp)

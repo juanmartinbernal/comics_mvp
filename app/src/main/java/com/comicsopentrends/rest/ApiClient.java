@@ -30,8 +30,7 @@ public class ApiClient {
     public static Retrofit getClient() {
         if (retrofit == null) {
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .addInterceptor(new AuthInterceptor(PUBLIC_KEY, PRIVATE_KEY));
-
+                    .addInterceptor(new AuthInterceptor(PUBLIC_KEY, PRIVATE_KEY, TIMESTAMP));
             OkHttpClient client = builder.build();
             retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
                     .client(client)
